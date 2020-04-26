@@ -7,7 +7,6 @@
 #include<iostream>
 
 
-
 int main(int argc, char **argv)
 {
     struct addrinfo hints;
