@@ -65,6 +65,7 @@ int main(int argc, char **argv)
         char i [80];
         time_t rawtime;
         struct tm* timeinfo;
+        time (&rawtime);
         timeinfo = localtime(&rawtime);
         switch(buffer[0])
         {
