@@ -33,22 +33,23 @@ int main(int argc, char **argv)
     freeaddrinfo(res);
     
     std::cout << "Pulse q desde para cerrar el servidor"<< std::endl;
-    std::string buffer;
-
-    while(buffer[0] != 'q')
+    char buffer[80];
+    char mensaje[80];
+    
+    while(strlen(buffer) > 2 || buffer[0] != 'q')
     {
-        char mensaje[80];
         memset(mensaje, 0, 80);
+        memset(buffer, 0, 80);
 
-        std::getline(std::cin, buffer);
+        fgets(buffer, sizeof(buffer)-1, stdin);
 
-        send(sd, (void *) buffer.c_str(), sizeof(std::string)*79, 0);
+        send(sd, buffer, sizeof(buffer), 0);
 
-        ssize_t bytes = recv(sd, (void *) mensaje, sizeof(std::char)*79, 0);
+        ssize_t bytes = recv(sd, mensaje, sizeof(mensaje), 0);
+
+        std::cout << "mensaje: " << mensaje << std::endl;
 
         mensaje[bytes] = '\0';
-
-        std::cout << mensaje << std::endl;
     }    
 
     std::cout << "Servidor cerrado"<< std::endl;
