@@ -65,13 +65,14 @@ class clock_Threads
                         sendto(_sd, i, size, 0, &client_addr, client_len);
                         break;
                     case 'q':
-                        working = false;
+                        if(strlen(buffer) > 2) working = false;
                         break;
                     default:
                         std::cout << "Comando no soportado " << buffer[0] << std::endl;
                         break;
                 }
             }
+            close(_sd);
         };
 };
 
@@ -119,14 +120,21 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < NUMERO_THREADS; ++i)
     {
-        clock_Threads cTh = clock_Threads(sd, i);
-        pool.push_back(std::thread(&clock_Threads::haz_mensaje, &cTh));
+        clock_Threads* cTh = new clock_Threads(sd, i);
+        pool.push_back(std::thread([&cTh](){
+                cTh->haz_mensaje();
+                delete cTh;
+                }));
+    }
+
+    for(auto &t : pool)
+    {
+        t.detach();
     }
 
     while(working){}
 
     std::cout << "Servidor cerrado" << std::endl;
 
-    close(sd);
     return 0;
 }
