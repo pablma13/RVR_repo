@@ -21,8 +21,10 @@ class chat_Threads
             // GESTION DE LA CONEXION CLIENTE //
             // ---------------------------------------------------------------------- //
             char buffer[80];
-            while(buffer[0] != 'q')
+            while(strlen(buffer) > 2 || buffer[0] != 'q')
             {
+                 memset(buffer, 0, 80);
+                 
                 ssize_t bytes = recv(_sd_client, (void *) buffer, sizeof(char)*79, 0);
 
                 if ( bytes <= 0 )
@@ -90,6 +92,8 @@ int main(int argc, char **argv)
 
     std::vector<std::thread> pool_thread;
 
+    std::cout << "Server del chat inicializado" << std::endl;
+
     while(true)
     {
         struct sockaddr client_addr;
@@ -104,10 +108,12 @@ int main(int argc, char **argv)
         std::cout << "CONEXION DESDE IP: " << host << " PUERTO: " << service << std::endl;
 
         //Crear thread para tratar cada conexion
-        chat_Threads c_TH = chat_Threads(sd_client, th_id++);
-        std::thread conexionthr(std::thread(&chat_Threads::haz_conexion, &c_TH));
-
-        conexionthr.detach();
+        chat_Threads* c_TH = new chat_Threads(sd_client, th_id++);
+        
+        std::thread([&c_TH](){
+                c_TH->haz_conexion();
+                delete c_TH;
+                }).detach();
     }
     return 0;
 }
