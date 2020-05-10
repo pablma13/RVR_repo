@@ -29,6 +29,9 @@ class chat_Threads
 
                 if ( bytes <= 0 )
                 {
+                    std::cout << "el cliente del thread [" << _thid << "] ha finalizado el chat" << std::endl;
+                    // FIN CONEXION
+                    close(_sd_client);
                     return;
                 }
 
@@ -112,8 +115,8 @@ int main(int argc, char **argv)
         
         std::thread([&c_TH](){
                 c_TH->haz_conexion();
-                delete c_TH;
                 }).detach();
     }
+    delete c_TH;
     return 0;
 }
