@@ -1,0 +1,4 @@
+El comando od nos permite leer el contenido de un archivo byte a byte
+
+La salida del comando nos muerta diréctamente como hemos ido paso a paso rellenando
+el archivo de bytes en el proceso de serialización.
